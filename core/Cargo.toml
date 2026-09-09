@@ -1,0 +1,13 @@
+[package]
+name = "rtl-terminal-core"
+version = "2.0.0"
+license = "MIT"
+authors = ["rust-memo"]
+description = "Core RTL/BiDi + Arabic shaping + PTY for RTL-Terminal"
+edition = "2021"
+
+[features]
+pty = []  # enable portable-pty shell sessions
+
+[dependencies]
+portable-pty = { version = "0.8", optional = true }

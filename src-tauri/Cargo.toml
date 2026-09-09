@@ -1,0 +1,17 @@
+[package]
+name = "rtl-terminal"
+version = "2.0.0"
+license = "MIT"
+authors = ["rust-memo"]
+description = "RTL Terminal desktop app - professional Arabic/RTL terminal (Tauri v2)"
+edition = "2021"
+
+[dependencies]
+rtl-terminal-core = { path = "../core", features = ["pty"] }
+tauri = { version = "2", features = [] }
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[features]
+default = []
