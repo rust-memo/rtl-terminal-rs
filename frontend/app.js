@@ -46,18 +46,21 @@
     term.write(out);
   }
 
-  // ---------- Tauri IPC path ----------
+  // ---------- Tauri IPC path (poll-based) ----------
   async function startTauri() {
     const { invoke } = window.__TAURI__.core;
-    const { listen } = window.__TAURI__.event;
-    unlisten = await listen('pty:data', (ev) => writeOut(ev.payload));
-    term.onData((d) => invoke('pty_write', { data: d }));
-    term.onResize(({ cols: c, rows: r }) => invoke('pty_resize', { cols: c, rows: r }));
-    const shell = await invoke('default_shell');
-    await invoke('pty_spawn', { shell: shell[0], args: shell[1], cols: term.cols, rows: term.rows });
+    await invoke('pty_start');
+    setInterval(async () => {
+      try {
+        const s = await invoke('pty_poll');
+        if (s && s.length) writeOut(s);
+      } catch (e) {}
+    }, 30);
+    term.onData((d) => { try { invoke('pty_write', { data: d }); } catch (e) {} });
+    term.onResize(({ cols: c, rows: r }) => { try { invoke('pty_resize', { cols: c, rows: r }); } catch (e) {} });
     setStatus(true, 'متصل ✓');
     modeBadge.textContent = 'Tauri IPC';
-    term.writeln('\x1b[32m✓ PTY جاهز — ' + shell[0] + '\x1b[0m');
+    term.writeln('\x1b[32m✓ PTY جاهز — Rust backend\x1b[0m');
   }
 
   // ---------- WebSocket fallback (browser demo) ----------
