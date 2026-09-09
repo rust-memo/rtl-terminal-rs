@@ -1,7 +1,16 @@
-# RTL-Terminal-RS — Rust (Tauri v2) rewrite
-# Professional-native terminal app: Rust backend, system WebView (frontend HTML/JS).
+# Rust
+target/
 
-frontend/node_modules/
+# Frontend
+node_modules/
 frontend/dist/
-src-tauri/target/
+
+# Archives
 *.zip
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
