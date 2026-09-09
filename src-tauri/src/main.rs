@@ -42,7 +42,7 @@ fn pty_poll(state: State<PtyState>) -> String {
 fn pty_write(state: State<PtyState>, data: String) -> Result<(), String> {
     let mut guard = state.inner().0.lock().map_err(|_| "state lock poisoned".to_string())?;
     match &mut *guard {
-        Some(sess) => rtl_terminal_core::pty::write(sess, data)?,
+        Some(sess) => rtl_terminal_core::pty::write(sess, &data)?,
         None => {}
     }
     Ok(())

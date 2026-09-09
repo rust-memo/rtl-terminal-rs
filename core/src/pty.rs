@@ -42,7 +42,7 @@ pub fn default_shell() -> (String, Vec<String>) {
 pub fn spawn(shell: String, args: Vec<String>, cols: u16, rows: u16) -> Result<PtySession, String> {
     let pty_sys = native_pty_system();
     let size = PtySize { rows, cols, pixel_width: 0, pixel_height: 0 };
-    let mut pair = pty_sys.openpty(size).map_err(|e| e.to_string())?;
+    let pair = pty_sys.openpty(size).map_err(|e| e.to_string())?;
     let mut cmd = CommandBuilder::new(&shell);
     for a in args {
         cmd.arg(a);
@@ -63,7 +63,7 @@ pub fn spawn(shell: String, args: Vec<String>, cols: u16, rows: u16) -> Result<P
                 Ok(n) => {
                     if n > 0 {
                         let mut guard = out.write().expect("outbuf lock");
-                        let mut q = &mut *guard;
+                        let q = &mut *guard;
                         q.push_back(buf[..n].to_vec());
                     }
                 }
@@ -84,7 +84,7 @@ pub fn write(sess: &mut PtySession, data: &str) -> Result<(), String> {
 /// Drain pending output (bounded). Safe to call from any thread.
 pub fn poll(sess: &PtySession, max_chars: usize) -> String {
     let mut guard = sess.outbuf.write().expect("outbuf lock");
-    let mut q = &mut *guard;
+    let q = &mut *guard;
     let mut out = String::new();
     while !q.is_empty() && out.len() < max_chars {
         let chunk = q.pop_front();
