@@ -17,29 +17,29 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: rtl-terminal-rs/src-tauri
+          workspaces: src-tauri
 
       - name: Install Tauri CLI
         run: cargo install tauri-cli --version ^2 --locked
 
       - name: Build Tauri app (Windows)
-        working-directory: rtl-terminal-rs/src-tauri
+        working-directory: src-tauri
         run: cargo tauri build --target x86_64-pc-windows-msvc
 
-      - name: Upload installer artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: RTL-Terminal-RS-win-x64
           path: |
-            rtl-terminal-rs/src-tauri/target/x86_64-pc-windows-msvc/release/*.exe
-            rtl-terminal-rs/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+            src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+            src-tauri/target/x86_64-pc-windows-msvc/release/rtl-terminal.exe
 
       - name: Publish release on tag
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            rtl-terminal-rs/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
-            rtl-terminal-rs/src-tauri/target/x86_64-pc-windows-msvc/release/rtl-terminal.exe
+            src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+            src-tauri/target/x86_64-pc-windows-msvc/release/rtl-terminal.exe
           draft: true
           prerelease: false
